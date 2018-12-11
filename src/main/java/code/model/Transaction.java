@@ -21,32 +21,33 @@ public class Transaction {
     @JoinColumn(name = "bookId")
     private Book book;
 
-    @NotBlank
-    @Size(max = 15)
     private Boolean status;
 
-    @NotBlank
-    @Size(max = 20)
     private Long deadline;
 
-    @NotBlank
-    @Size(max = 20)
     private Date createdAt;
 
-    @NotBlank
-    @Size(max = 20)
     private Date returnAt;
 
     public Transaction() {
     }
 
-    public Transaction(User user, Book book, @NotBlank @Size(max = 20) Long deadline) {
+    public Transaction(User user, Book book, Long deadline) {
         this.user = user;
         this.book = book;
         this.status = true;
         this.deadline = deadline;
         this.createdAt = new Date();
-        this.returnAt = new Date(this.createdAt.getTime() + (this.deadline * 1000 * 60 * 60 * 24));
+        /*this.returnAt = new Date(this.createdAt.getTime() + (this.deadline * 1000 * 60 * 60 * 24));*/
+    }
+
+    public Transaction(Request request){
+        this.user = request.getUser();
+        this.book = request.getBook();
+        this.status = true;
+        this.deadline = request.getDeadline();
+        this.createdAt = new Date();
+        /*this.returnAt = new Date(this.createdAt.getTime() + (this.deadline * 1000 * 60 * 60 * 24));*/
     }
 
     public Long getId() {

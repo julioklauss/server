@@ -31,7 +31,7 @@ public class Request {
     public Request() {
     }
 
-    public Request(User user, Book book, @NotBlank @Size(max = 20) Long deadline) {
+    public Request(User user, Book book, Long deadline) {
         this.user = user;
         this.book = book;
         this.status = true;

@@ -8,7 +8,6 @@ import code.repository.BookRepository;
 import code.repository.RequestRepository;
 import code.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +23,7 @@ public class RequestController {
     private UserRepository userRepository;
     @Autowired
     private BookRepository bookRepository;
+
     @GetMapping("/list")
 //    @PreAuthorize("hasRole('USER')")
     public List<Request> listRequest() {
@@ -44,6 +44,15 @@ public class RequestController {
         request.setStatus(false);
 
         return requestRepository.save(request);
+    }
+
+    @GetMapping("/check")
+    public boolean checkRequest(@RequestParam Long bookId, @RequestParam Long userId) {
+        List<Request> request = requestRepository.findFirstByUserIdAndBookId(userId, bookId);
+        if (request.size() > 0) {
+            return true;
+        }
+        return false;
     }
 
     @PostMapping("{id}/delete")

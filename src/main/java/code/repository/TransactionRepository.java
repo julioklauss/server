@@ -13,4 +13,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     @Query("SELECT a from  Transaction  a where  a.user = user")
     List<Transaction> findByName(User user);
+    List<Transaction> findByBookId(Long id);
 }

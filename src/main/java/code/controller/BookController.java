@@ -2,15 +2,18 @@ package code.controller;
 
 import code.exception.AppException;
 import code.model.Book;
+import code.model.Request;
+import code.model.Transaction;
 import code.payload.CreateBook;
 import code.repository.BookRepository;
+import code.repository.RequestRepository;
+import code.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 import static code.model.Message.FailMsg;
 
@@ -19,9 +22,12 @@ import static code.model.Message.FailMsg;
 public class BookController {
     @Autowired
     private BookRepository bookRepository;
+    @Autowired
+    private TransactionRepository transactionRepository;
+    @Autowired
+    private RequestRepository requestRepository;
 
     @GetMapping("/book")
-//    @PreAuthorize("hasRole('USER')")
     public List<Book> listBook() {
         return bookRepository.findAllByOrderByIdAsc();
     }
@@ -40,6 +46,10 @@ public class BookController {
     @PostMapping("/book/{id}/delete")
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteBook(@PathVariable Long id) {
+        List<Transaction> transaction = transactionRepository.findByBookId(id);
+        transactionRepository.deleteAll(transaction);
+        List<Request> request = requestRepository.findByBookId(id);
+        requestRepository.deleteAll(request);
         bookRepository.deleteById(id);
     }
 
